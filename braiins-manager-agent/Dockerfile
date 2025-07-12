@@ -14,14 +14,22 @@ ARG BUILD_VERSION
 # Install requirements for add-on
 RUN apk add --no-cache \
     coreutils \
-    wget
+    wget \
+    dpkg
 
 # Copy root filesystem
 COPY rootfs /
 
-# Download binary from downloads.braiins.com
-RUN wget -O /usr/bin/bma-daemon "https://downloads.braiins.com/bma-daemon-${BUILD_ARCH}" && \
-    chmod +x /usr/bin/bma-daemon
+# Download and extract binary from downloads.braiins.com
+RUN if [ "$BUILD_ARCH" = "amd64" ]; then \
+        wget -O /tmp/braiins-manager-agent.deb "https://downloads.braiins.com/braiins-manager-agent/assets/4.1.5/braiins-manager-agent-linux-x86_64.deb"; \
+    elif [ "$BUILD_ARCH" = "aarch64" ]; then \
+        wget -O /tmp/braiins-manager-agent.deb "https://downloads.braiins.com/braiins-manager-agent/assets/4.1.5/braiins-manager-agent-linux-aarch64.deb"; \
+    fi && \
+    dpkg-deb -x /tmp/braiins-manager-agent.deb /tmp/ && \
+    cp /tmp/usr/bin/braiins-manager-agent /usr/bin/bma-daemon && \
+    chmod +x /usr/bin/bma-daemon && \
+    rm -rf /tmp/braiins-manager-agent.deb /tmp/usr
 
 # Copy run script
 COPY run.sh /run.sh
