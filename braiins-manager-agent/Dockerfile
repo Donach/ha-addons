@@ -19,12 +19,13 @@ RUN apk add --no-cache \
 # Copy root filesystem
 COPY rootfs /
 
-# Copy binaries
-COPY bma-daemon-${BUILD_ARCH} /usr/bin/bma-daemon
+# Download binary from downloads.braiins.com
+RUN wget -O /usr/bin/bma-daemon "https://downloads.braiins.com/bma-daemon-${BUILD_ARCH}" && \
+    chmod +x /usr/bin/bma-daemon
 
 # Copy run script
 COPY run.sh /run.sh
-RUN chmod a+x /run.sh /usr/bin/bma-daemon
+RUN chmod a+x /run.sh
 
 # Labels
 LABEL \
