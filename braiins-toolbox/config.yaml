@@ -1,6 +1,6 @@
 ---
 name: "Braiins Toolbox"
-version: "25.03.0"
+version: "25.03.1"
 slug: "braiins-toolbox"
 description: "Braiins Toolbox - Bitcoin mining farm management software with web interface"
 url: "https://github.com/Donach/ha-addons/tree/main/braiins-toolbox"
