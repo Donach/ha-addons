@@ -1,0 +1,10 @@
+build_from:
+  aarch64: ghcr.io/hassio-addons/debian-base:7.6.2
+  armv7: ghcr.io/hassio-addons/debian-base:7.6.2
+codenotary:
+  base_image: codenotary@frenck.dev
+  signer: codenotary@frenck.dev
+labels:
+  io.hass.name: "RustBerry PoE Monitor"
+  io.hass.description: "Monitor and control Raspberry Pi PoE HAT (B) with OLED display"
+  io.hass.type: addon
