@@ -8,4 +8,4 @@ bashio::log.info "Container initialization complete."
 # Usually, CMD is for the main application. If the main app is a service, CMD is often ignored or used for legacy compatibility.
 # In this case, we just log and exit, letting s6 keep the container running due to services.
 bashio::log.info "Handing over to s6 supervision."
-exit 0
+exec sleep infinity

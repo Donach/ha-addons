@@ -51,6 +51,23 @@ if [ -n "${ARCH}" ]; then
 
     if [ -n "${LATEST_VERSION}" ]; then
         bashio::log.info "Latest version found: ${LATEST_VERSION}"
+
+        # Check installed version to avoid unnecessary downloads
+        INSTALLED_VERSION=""
+        VERSION_FILE="/data/.bma-version"
+        if [ -f "${VERSION_FILE}" ]; then
+            INSTALLED_VERSION=$(cat "${VERSION_FILE}")
+        fi
+
+        if [ "${INSTALLED_VERSION}" = "${LATEST_VERSION}" ]; then
+            bashio::log.info "Already running latest version ${INSTALLED_VERSION}, skipping update."
+        else
+            if [ -n "${INSTALLED_VERSION}" ]; then
+                bashio::log.info "Updating from ${INSTALLED_VERSION} to ${LATEST_VERSION}..."
+            else
+                bashio::log.info "Installing version ${LATEST_VERSION}..."
+            fi
+
         DOWNLOAD_URL="https://downloads.braiins.com/braiins-manager-agent/assets/${LATEST_VERSION}/braiins-manager-agent-linux-${ARCH}.deb"
 
         # Create temp dir
@@ -73,6 +90,7 @@ if [ -n "${ARCH}" ]; then
                             bashio::log.info "Replacing binary..."
                             cp "${NEW_BINARY}" /usr/bin/bma-daemon
                             chmod +x /usr/bin/bma-daemon
+                            echo "${LATEST_VERSION}" > "${VERSION_FILE}"
                             bashio::log.info "Update complete."
                         else
                             bashio::log.error "Could not find bma-daemon binary in extracted package."
@@ -93,6 +111,7 @@ if [ -n "${ARCH}" ]; then
         # Cleanup
         cd /
         rm -rf "${TEMP_DIR}"
+        fi
     else
         bashio::log.warning "Failed to fetch latest version info."
     fi
