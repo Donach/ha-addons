@@ -25,6 +25,23 @@ esac
 
 bashio::log.info "Starting Braiins Toolbox for architecture: ${ARCH}"
 
+# Fetch latest version if auto-update is enabled
+if [ "${AUTO_UPDATE}" = "true" ]; then
+    bashio::log.info "Checking for latest Braiins Toolbox version..."
+    LATEST_VERSION=$(curl -s https://downloads.braiins.com/braiins-toolbox/ | grep -oE 'assets/[0-9.]+' | cut -d/ -f2 | sort -V | tail -n 1)
+
+    if [ -n "${LATEST_VERSION}" ]; then
+        if [ "${LATEST_VERSION}" != "${BRAIINS_TOOLBOX_VERSION}" ]; then
+            bashio::log.info "New version found: ${LATEST_VERSION} (current configured: ${BRAIINS_TOOLBOX_VERSION})"
+            BRAIINS_TOOLBOX_VERSION="${LATEST_VERSION}"
+        else
+            bashio::log.info "Already using the latest version: ${BRAIINS_TOOLBOX_VERSION}"
+        fi
+    else
+        bashio::log.warning "Failed to fetch latest version, using configured version: ${BRAIINS_TOOLBOX_VERSION}"
+    fi
+fi
+
 # Download URL
 DOWNLOAD_URL="https://downloads.braiins.com/braiins-toolbox/assets/${BRAIINS_TOOLBOX_VERSION}/braiins-toolbox-linux-${ARCH}.tar.gz"
 TOOLBOX_DIR="/opt/braiins-toolbox"
@@ -33,6 +50,7 @@ BINARY_PATH="${TOOLBOX_DIR}/braiins-toolbox"
 # Function to download and extract Braiins Toolbox
 download_toolbox() {
     bashio::log.info "Downloading Braiins Toolbox ${BRAIINS_TOOLBOX_VERSION} for ${ARCH}..."
+    bashio::log.info "Download URL: ${DOWNLOAD_URL}"
     
     # Create temporary directory
     TEMP_DIR=$(mktemp -d)
