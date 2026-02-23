@@ -1,0 +1,40 @@
+---
+name: "RustBerry PoE Monitor"
+version: "1.2.0"
+slug: "rustberry-poe-monitor"
+description: "A controller for the display and fan of the Raspberry Pi Waveshare PoE HAT (B)"
+url: "https://github.com/jackra1n/RustBerry-PoE-Monitor"
+arch:
+  - aarch64
+  - armv7
+startup: application
+boot: auto
+init: false
+host_network: true
+privileged:
+  - SYS_RAWIO
+devices:
+  - /dev/i2c-1
+  - /dev/gpiomem
+options:
+  display:
+    brightness: 2
+    screen_timeout: 300
+    enable_periodic_off: false
+    periodic_on_duration: 10
+    periodic_off_duration: 20
+    refresh_interval_ms: 1000
+  fan:
+    temp_on: 60.0
+    temp_off: 50.0
+schema:
+  display:
+    brightness: int(0,4)
+    screen_timeout: int(0,)
+    enable_periodic_off: bool
+    periodic_on_duration: int(1,)
+    periodic_off_duration: int(1,)
+    refresh_interval_ms: int(100,)
+  fan:
+    temp_on: float(0.0,)
+    temp_off: float(0.0,)
