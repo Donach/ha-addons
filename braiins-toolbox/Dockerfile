@@ -20,7 +20,8 @@ RUN apk add --no-cache \
     curl \
     tar \
     gzip \
-    ca-certificates
+    ca-certificates \
+    coreutils
 
 # Copy run script
 COPY run.sh /run.sh
