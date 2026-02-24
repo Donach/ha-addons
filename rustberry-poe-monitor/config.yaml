@@ -1,4 +1,7 @@
+<<<<<<< feature/rustberry-poe-monitor-addon-1400568440782829017
 ---
+=======
+>>>>>>> main
 name: "RustBerry PoE Monitor"
 version: "1.2.0"
 slug: "rustberry-poe-monitor"
