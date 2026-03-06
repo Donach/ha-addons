@@ -1,3 +1,5 @@
 braiins-manager-agent/rootfs/etc/braiins-manager-agent/daemon.yaml
+braiins-manager-agent/bma-daemon-*
+braiins-manager-agent/bma-gui-*
 test-addon.sh
 test-data/options.json

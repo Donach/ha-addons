@@ -53,9 +53,10 @@ if [ -n "${ARCH}" ]; then
         bashio::log.info "Latest version found: ${LATEST_VERSION}"
 
         # Check installed version to avoid unnecessary downloads
+        # The updated binary is stored in /data/ (persistent) so it survives container rebuilds
         INSTALLED_VERSION=""
         VERSION_FILE="/data/.bma-version"
-        if [ -f "${VERSION_FILE}" ]; then
+        if [ -f "${VERSION_FILE}" ] && [ -f "/data/bma-daemon" ]; then
             INSTALLED_VERSION=$(cat "${VERSION_FILE}")
         fi
 
@@ -88,8 +89,8 @@ if [ -n "${ARCH}" ]; then
                         NEW_BINARY=$(find . -name "bma-daemon" -type f | head -1)
                         if [ -n "${NEW_BINARY}" ]; then
                             bashio::log.info "Replacing binary..."
-                            cp "${NEW_BINARY}" /usr/bin/bma-daemon
-                            chmod +x /usr/bin/bma-daemon
+                            cp "${NEW_BINARY}" /data/bma-daemon
+                            chmod +x /data/bma-daemon
                             echo "${LATEST_VERSION}" > "${VERSION_FILE}"
                             bashio::log.info "Update complete."
                         else
@@ -114,5 +115,11 @@ if [ -n "${ARCH}" ]; then
         fi
     else
         bashio::log.warning "Failed to fetch latest version info."
+    fi
+
+    # Verify binary exists (required since binaries are downloaded, not bundled)
+    if [ ! -f "/data/bma-daemon" ]; then
+        bashio::log.fatal "No bma-daemon binary available. Download may have failed."
+        exit 1
     fi
 fi

@@ -22,12 +22,9 @@ RUN apk add --no-cache \
 # Copy root filesystem
 COPY rootfs /
 
-# Copy binaries
-COPY bma-daemon-${BUILD_ARCH} /usr/bin/bma-daemon
-
 # Copy run script
 COPY run.sh /run.sh
-RUN chmod a+x /run.sh /usr/bin/bma-daemon
+RUN chmod a+x /run.sh
 
 # Labels
 LABEL \

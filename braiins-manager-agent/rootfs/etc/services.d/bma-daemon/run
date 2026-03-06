@@ -2,12 +2,12 @@
 
 cd /data || exit
 
-if [ ! -f /usr/bin/bma-daemon ]; then
-    bashio::log.error "bma-daemon binary not found"
+if [ ! -f /data/bma-daemon ]; then
+    bashio::log.error "bma-daemon binary not found in /data/"
     exit 1
 fi
 
 # Get the logging level from config or use "info" as default if missing
 LOG_LEVEL=$(bashio::config 'logging.level' 'info')
 export RUST_LOG="${LOG_LEVEL}"
-exec /usr/bin/bma-daemon
+exec /data/bma-daemon
